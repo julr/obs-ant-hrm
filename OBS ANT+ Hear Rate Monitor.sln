@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OBS App", "OBS App\OBS App.csproj", "{1429EB0C-D0F0-4CB5-A94E-23A1DF550462}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ant", "Ant\Ant.csproj", "{9265FDED-6627-40A3-B551-564FB84CB511}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1429EB0C-D0F0-4CB5-A94E-23A1DF550462}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1429EB0C-D0F0-4CB5-A94E-23A1DF550462}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1429EB0C-D0F0-4CB5-A94E-23A1DF550462}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1429EB0C-D0F0-4CB5-A94E-23A1DF550462}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9265FDED-6627-40A3-B551-564FB84CB511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9265FDED-6627-40A3-B551-564FB84CB511}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9265FDED-6627-40A3-B551-564FB84CB511}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9265FDED-6627-40A3-B551-564FB84CB511}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F1EA1764-A188-4713-AE38-08B35A459E36}
+	EndGlobalSection
+EndGlobal
