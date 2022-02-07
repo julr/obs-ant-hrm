@@ -1,8 +1,8 @@
 ﻿using Bluegrams.Application;
 using System;
+using System.IO;
 using System.Timers;
 using System.Windows;
-using System.IO;
 
 namespace ObsHeartRateMonitor
 {
@@ -15,7 +15,9 @@ namespace ObsHeartRateMonitor
         private readonly Ant.Device.HeartRateMonitor heartRateMonitor;
         private readonly Timer logTimer;
         private int lastLogValue;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public MainWindow()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             PortableSettingsProvider.SettingsFileName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".config";
             PortableSettingsProvider.SettingsDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -26,9 +28,10 @@ namespace ObsHeartRateMonitor
             Application.Current.DispatcherUnhandledException += UnhandledException;
 
             int sensor = Properties.Settings.Default.Sensor;
-            if(sensor != 0) TextBoxSensorId.Text = sensor.ToString();
+            if (sensor != 0) TextBoxSensorId.Text = sensor.ToString();
             CheckBoxLogEnabled.IsChecked = Properties.Settings.Default.IsLogEnabled;
             ComboBoxLogRate.SelectedIndex = Properties.Settings.Default.LogRefreshRate;
+            CheckBoxReconnect.IsChecked = Properties.Settings.Default.AutoReconnect;
 
             try
             {
@@ -37,12 +40,12 @@ namespace ObsHeartRateMonitor
 
                 heartRateMonitor = new Ant.Device.HeartRateMonitor(antDongle.Channels[0]);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Close();
             }
-            
+
             logTimer = new Timer
             {
                 AutoReset = true
@@ -64,7 +67,7 @@ namespace ObsHeartRateMonitor
 
         private void ButtonConnectDisconnect_Click(object sender, RoutedEventArgs e)
         {
-            if((string)ButtonConnectDisconnect.Content == "Connect")
+            if ((string)ButtonConnectDisconnect.Content == "Connect")
             {
                 Connect();
             }
@@ -80,18 +83,18 @@ namespace ObsHeartRateMonitor
         }
         private void HeartRateMonitor_SensorNotFound(object? sender, EventArgs e)
         {
-            MessageBox.Show("Sensor not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("Sensor not found or disconnected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             Dispatcher.BeginInvoke(new Action(() => { Disconnect(); }));
         }
 
         private void LogTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             int heartRate = heartRateMonitor.HeartRate;
-            if((heartRate > 0) && (lastLogValue != heartRate))
+            if ((heartRate > 0) && (lastLogValue != heartRate))
             {
                 File.WriteAllText(System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".txt", heartRate.ToString());
                 lastLogValue = heartRate;
-            } 
+            }
         }
 
         private void Connect()
@@ -104,9 +107,13 @@ namespace ObsHeartRateMonitor
                     TextBoxSensorId.IsEnabled = false;
                     ButtonSearch.IsEnabled = false;
                     GroupBoxObs.IsEnabled = false;
+                    CheckBoxReconnect.IsEnabled = false;
                     heartRateMonitor.NewSensorDataReceived += HeartRateMonitor_NewSensorDataReceived;
-                    heartRateMonitor.SensorNotFound += HeartRateMonitor_SensorNotFound;
-                    heartRateMonitor.Start((ushort)sensorId);
+
+                    bool reconnect = CheckBoxReconnect.IsChecked ?? false;
+                    if (!reconnect)
+                        heartRateMonitor.SensorNotFound += HeartRateMonitor_SensorNotFound;
+                    heartRateMonitor.Start((ushort)sensorId, reconnect);
 
                     if (sensorId > 0)
                     {
@@ -114,6 +121,7 @@ namespace ObsHeartRateMonitor
                     }
                     Properties.Settings.Default.IsLogEnabled = CheckBoxLogEnabled.IsChecked ?? false;
                     Properties.Settings.Default.LogRefreshRate = ComboBoxLogRate.SelectedIndex;
+                    Properties.Settings.Default.AutoReconnect = reconnect;
                     Properties.Settings.Default.Save();
 
                     if (CheckBoxLogEnabled.IsChecked ?? false)
@@ -139,6 +147,7 @@ namespace ObsHeartRateMonitor
             TextBoxSensorId.IsEnabled = true;
             ButtonSearch.IsEnabled = true;
             GroupBoxObs.IsEnabled = true;
+            CheckBoxReconnect.IsEnabled = true;
             heartRateMonitor.NewSensorDataReceived -= HeartRateMonitor_NewSensorDataReceived;
             heartRateMonitor.SensorNotFound -= HeartRateMonitor_SensorNotFound;
             heartRateMonitor.Stop();
