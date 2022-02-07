@@ -9,7 +9,8 @@ This tool needs nothing more than absolutely needed, a sensor and a USB dongle, 
 ### USB Dongle
 To be able to receive the sensor values a ANT+ USB dongle is needed.\
 This tool was coded and tested with the official "Garmin ANT+ USB-Stick" (also known as "ANT USB-m Stick") but you can find a lot of different dongles in various online stores.
-As long as it registers with the VID 0x0FCF and the PID 0x1009 it should work.
+It was also testes with a cheap dongle "USB ANT STICK U1" from "CYCPLUS".\
+As long as it registers with the VID 0x0FCF and the PID 0x1008 or 0x1009 it should work.
 ### Hear Rate Sensor
 Every sensor that is ANT+ compatible should work. This tool was coded and tested with a cheap "H8 Heart Rate Monitor" from "COOSPO".
 
