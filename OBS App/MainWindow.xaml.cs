@@ -1,5 +1,6 @@
 ﻿using Bluegrams.Application;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Timers;
 using System.Windows;
@@ -20,7 +21,7 @@ namespace ObsHeartRateMonitor
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             PortableSettingsProvider.SettingsFileName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".config";
-            PortableSettingsProvider.SettingsDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            PortableSettingsProvider.SettingsDirectory = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName);
             PortableSettingsProvider.ApplyProvider(Properties.Settings.Default);
 
             InitializeComponent();
